@@ -1,0 +1,57 @@
+.Tile {
+  display: flex;
+  padding: 10px 20px;
+  height: 20vh;
+  margin-bottom: 5px;
+  border: 2px solid black;
+  border-radius: 9px;
+  flex-wrap: wrap;
+}
+.Tile__img img {
+  cursor: pointer;
+  height: 5rem;
+}
+
+.Tile__details {
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  flex: 0.7;
+  padding: 0px 10px;
+  margin-top: 0%;
+}
+.Tile__details p {
+  margin: 0%;
+  padding: 0%;
+}
+.Tile__details #name {
+  font-weight: bolder;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.Tile__delete,
+.Tile__img {
+  flex: 0.15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.Tile__delete button{
+    font: caption;
+    font-size: 1rem;
+    /* background-color: red; */
+    background-color: rgba(240, 45, 45, 0.987);
+    color: white;
+    border-radius: 9px;
+    padding: 3px 9px;
+    
+    
+    border: none;
+}
+.Tile__delete button:hover{
+    /* color: rgb(232, 193, 193); */
+    /* background-color: rgba(240, 45, 45, 0.987); */
+    background-color: red;
+    border: 2px solid white;
+} 

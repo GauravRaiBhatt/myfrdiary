@@ -1,0 +1,49 @@
+#AddRecepient__container{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#AddRecepient__container h1{
+    text-decoration: underline
+}
+
+#AddRecepient__container #inputForm{
+    display: flex;
+    flex-direction: column;
+}
+
+#AddRecepient__container #inputForm label{
+    display: flex;
+    flex-direction: column;
+    padding: 9px 0px;
+    width: 50vw;
+}
+
+#inputForm label input{
+    padding: 7px 7px;
+    border-radius: 7px;
+    border: none;
+    background-color: rgba(128, 128, 128, 0.296);
+}
+
+#AddRecepient__container button{
+    margin-top: 2rem;
+    padding: 3px 19px;
+    border: none;
+    font-size: 1.5rem;
+    font-weight: bolder;
+    border: 1px solid rgb(153, 255, 0);
+    border-radius: 13px;
+}
+#AddRecepient__container button:hover{
+    /* background-color: rgba(201, 201, 201, 0.624); */
+    /* background-color: white; */
+    background-color: green;
+    border-color: yellow;
+    color: whitesmoke;
+    transition: 250ms  ease-in-out;
+    padding: 3px 42px;
+}

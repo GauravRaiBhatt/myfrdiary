@@ -1,0 +1,17 @@
+#Middle{
+    border:  2px solid red;
+      display: flex;
+      flex: 0.7;
+      flex-direction: column;
+      padding:9px;
+  }
+
+
+  
+
+  @media (max-width: 768px) {
+    #Middle {
+      flex: 1;
+    }
+  }
+  
