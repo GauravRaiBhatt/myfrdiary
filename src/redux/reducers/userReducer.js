@@ -13,7 +13,9 @@ const userReducer = (state = INITIAL_STATE, action) => {
 
 
     case actionTypes.REMOVE_USER:
-      return INITIAL_STATE;
+      return {
+        userData:null
+      }
 
 
     case actionTypes.ADD_TO_RECEPIENTS_ARRAY:

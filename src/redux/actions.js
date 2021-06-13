@@ -18,27 +18,26 @@ export const fetchDataAfterRefresh = (dispatch) => {
           type: actionsTypes.ADD_USER,
           payload: userDataFromFirebase,
         });
-      })
-      .catch((e) => {
-        console.log(e.code);
-      });
 
-    // fetch recepients
-    db.collection("recepients")
-      .get()
-      .then((docs) => {
-        if(docs.exists){
-        console.log(docs);
-        console.log(docs.data());
-        let allRecepients = {};
-        allRecepients = docs.map((doc) => doc.userId.data() === userId);
+        // fetch recepients
+        if (userDataFromFirebase.recepients.length) {
+          db.collection("recepients")
+            .where("userId", "==", userId)
+            .get()
+            .then((querySnapshot) => {
+              let allRecepients = [];
+              querySnapshot.forEach((doc) => {
+                allRecepients.push(doc.data());
+              });
 
-        dispatch({
-          type:actionsTypes.ADD_RECEPIENT,
-          payload:allRecepients
-        })}
+              dispatch({
+                type: actionsTypes.ADD_RECEPIENT,
+                payload: allRecepients,
+              });
+            });
+        }
       })
-      .catch(e=>console.log(e))
+      .catch((e) => console.log(e));
   }
 };
 
@@ -58,13 +57,30 @@ export const loginAPI = (dispatch, userDetails) => {
         .get()
         .then((doc) => {
           userDataFromFirebase = doc.data();
-          // localStorage.setItem("authToken", authToken);
           localStorage.setItem("userId", userId);
           dispatch({
             type: actionsTypes.ADD_USER,
             payload: userDataFromFirebase,
           });
         });
+
+      // fetch recepients
+      if (userDataFromFirebase.recepients.length) {
+        db.collection("recepients")
+          .where("userId", "==", userId)
+          .get()
+          .then((querySnapshot) => {
+            let allRecepients = [];
+            querySnapshot.forEach((doc) => {
+              allRecepients.push(doc.data());
+            });
+
+            dispatch({
+              type: actionsTypes.ADD_RECEPIENT,
+              payload: allRecepients,
+            });
+          });
+      }
     })
     .catch((e) => {
       console.log(e.code);
@@ -73,7 +89,7 @@ export const loginAPI = (dispatch, userDetails) => {
 
 // signup and userData in redux
 export const signUpAPI = (dispatch, userDetails) => {
-  let authToken, userId;
+  let userId;
   auth
     .createUserWithEmailAndPassword(
       userDetails.userEmail,
@@ -89,16 +105,32 @@ export const signUpAPI = (dispatch, userDetails) => {
         userImageURL: null,
         createdAt: new Date().toISOString(),
         userId,
-        recepients:[]
+        recepients: [],
       };
       db.doc(`/users/${userId}`).set(userDataForFirebase).then();
-      // saving authentication token to localStorage
-      // localStorage.setItem("authToken", authToken);
       localStorage.setItem("userId", userId);
       dispatch({
         type: actionsTypes.ADD_USER,
         payload: userDataForFirebase,
       });
+
+      // fetch recepients if there is sme recepientId's in recepients[] in collection named user
+      if (userDataForFirebase.recepients.length) {
+        db.collection("recepients")
+          .where("userId", "==", userId)
+          .get()
+          .then((querySnapshot) => {
+            let allRecepients = [];
+            querySnapshot.forEach((doc) => {
+              allRecepients.push(doc.data());
+            });
+
+            dispatch({
+              type: actionsTypes.ADD_RECEPIENT,
+              payload: allRecepients,
+            });
+          });
+      }
     })
     .catch((e) => {
       console.log(e.code);
@@ -114,6 +146,11 @@ export const signOutAPI = (dispatch) => {
   dispatch({
     type: actionsTypes.REMOVE_USER,
   });
+
+  // dispatch remove allRecepients
+  dispatch({
+    type:actionsTypes.REMOVE_ALLRECEPIENTS
+  })
 };
 
 export const addRecepientAPI = (dispatch, userId, recepientData) => {
@@ -128,12 +165,17 @@ export const addRecepientAPI = (dispatch, userId, recepientData) => {
       db.doc(`/users/${userId}`).update({
         recepients: firebase.firestore.FieldValue.arrayUnion(recepientId),
       });
-      recepientData["recepientId"] = recepientId;
+      // insert recepientId in the doc of collection recepients
+      db.doc(`/recepients/${recepientId}`).update({
+        recepientId
+      });
 
+      let updatedRecepientData = recepientData
+      updatedRecepientData["recepientId"] = recepientId;
       // dispatch addRecepient
       dispatch({
         type: actionsTypes.ADD_RECEPIENT,
-        payload: recepientData,
+        payload: updatedRecepientData,
       });
 
       // also dispatch ADD_TO_RECEPIENTS_ARRAY to append new recepientId to recepients[] of user
