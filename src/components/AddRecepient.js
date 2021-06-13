@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router";
+import { useHistory } from "react-router-dom";
 import { addRecepientAPI } from "../redux/actions";
 import "./styling/addRecepient.css";
 
@@ -8,6 +9,7 @@ function AddRecepient() {
   const userData = useSelector((state) => state.user.userData);
   const recepientData = useSelector((state) => state.data.recepientData);
   const dispatch = useDispatch();
+  const history = useHistory();
   const [recepientName, setRecepientName] = useState("");
   const [recepientPhone, setRecepientPhone] = useState("");
   const [recepientNickname, setRecepientNickname] = useState("");
@@ -23,8 +25,9 @@ function AddRecepient() {
         userId: userData.userId,
         transactions: [],
       };
+      history.push('/home');
       addRecepientAPI(dispatch, userData.userId, recepientData);
-      <Redirect to="/home" />;
+//       <Redirect to="/home" />;
 
       // setTimeout(() => {
       //   <Redirect to="/home" />;
